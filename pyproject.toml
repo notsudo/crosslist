@@ -1,20 +1,13 @@
 [project]
 name = "crosslist"
 version = "0.1.0"
-description = "Batch-create clothing listings for Vinted, Grailed, Depop and more from one CSV."
-readme = "README.md"
+description = "Batch-create clothing listings for Vinted, Grailed, Depop and eBay from one CSV"
 requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8"]
+dev = ["pytest"]
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
