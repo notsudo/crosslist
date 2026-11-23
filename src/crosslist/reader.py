@@ -1,21 +1,34 @@
 import csv
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
+from crosslist.models import Listing, Condition
 
-from crosslist.models import Listing
+
+REQUIRED_COLUMNS = ("sku","title","brand","size","price","condition")
 
 
 def read_listings(csv_path):
     listings = []
     with open(csv_path, newline="") as file:
         reader = csv.DictReader(file)
-        for row in reader:
+        for column in REQUIRED_COLUMNS:
+            if column not in reader.fieldnames:
+                raise ValueError(f"Missing Column: {column}")
+        for line_number,row in enumerate(reader, start=2):
+            try:
+                condition = Condition(row['condition'])
+            except ValueError:
+                raise ValueError(f"Line {line_number}: unknown condition '{row['condition']}'")
+            try:
+                price = Decimal(row['price'])
+            except InvalidOperation:
+                raise ValueError(f"Line {line_number}: invalid price '{row['price']}'")
             listing = Listing(
                 sku=row['sku'],
                 title=row['title'],
                 brand=row['brand'],
                 size=row['size'],
-                price=Decimal(row['price']),
-                condition=row['condition'],
+                price=price,
+                condition=condition,
                 description=row.get('description','')
             )
             listings.append(listing)
