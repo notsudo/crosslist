@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from crosslist.models import Condition
 from crosslist.reader import read_listings
 
 
@@ -28,3 +28,11 @@ def test_description_is_optional(tmp_path):
     )
     listings = read_listings(csv_file)
     assert listings[0].description == ''
+
+def test_condition_becomes_enum(tmp_path):
+    csv_file = tmp_path / "listing.csv"
+    csv_file.write_text("sku,title,brand,size,price,condition,description\n"
+    "CL001,Tee,NiKe,S,23,good,red with blue dragon\n"
+    )
+    listings = read_listings(csv_file)
+    assert listings[0].condition is Condition.GOOD

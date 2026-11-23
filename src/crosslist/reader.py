@@ -1,7 +1,7 @@
 import csv
 from decimal import Decimal
 
-from crosslist.models import Listing
+from crosslist.models import Listing, Condition
 
 
 def read_listings(csv_path):
@@ -15,7 +15,7 @@ def read_listings(csv_path):
                 brand=row['brand'],
                 size=row['size'],
                 price=Decimal(row['price']),
-                condition=row['condition'],
+                condition=Condition(row['condition']),
                 description=row.get('description','')
             )
             listings.append(listing)
