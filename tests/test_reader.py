@@ -3,6 +3,7 @@ from crosslist.models import Condition
 from crosslist.reader import read_listings
 import pytest
 
+
 def test_reads_one_listing_per_row(tmp_path):
     csv_file = tmp_path / "listing.csv"
     csv_file.write_text("sku,title,brand,size,price,condition,description\nCL001,Tee,NiKe,S,23,good,red with a shark on it\nCL002,Kmrii Sweater,Kmrii,L,25.32,new_with_tags,japenese kmrii sweater yellow and black")
@@ -51,4 +52,10 @@ def test_bad_price_reports(tmp_path):
     csv_file.write_text("sku,title,brand,size,price,condition,description\n"
         "CL001,Tee,NiKe,S,forty,good,red with blue dragon\n")
     with pytest.raises(ValueError, match="Line 2"):
+        read_listings(csv_file)
+
+def test_missing_column_names_it(tmp_path):
+    csv_file = tmp_path / "listings.csv"
+    csv_file.write_text("sku,title,brand,size,condition,description\n")
+    with pytest.raises(ValueError, match="price"):
         read_listings(csv_file)

@@ -1,13 +1,18 @@
 import csv
 from decimal import Decimal, InvalidOperation
-
 from crosslist.models import Listing, Condition
+
+
+REQUIRED_COLUMNS = ("sku","title","brand","size","price","condition")
 
 
 def read_listings(csv_path):
     listings = []
     with open(csv_path, newline="") as file:
         reader = csv.DictReader(file)
+        for column in REQUIRED_COLUMNS:
+            if column not in reader.fieldnames:
+                raise ValueError(f"Missing Column: {column}")
         for line_number,row in enumerate(reader, start=2):
             try:
                 condition = Condition(row['condition'])
