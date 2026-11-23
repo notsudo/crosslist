@@ -1,5 +1,5 @@
 import csv
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from crosslist.models import Listing, Condition
 
@@ -13,12 +13,16 @@ def read_listings(csv_path):
                 condition = Condition(row['condition'])
             except ValueError:
                 raise ValueError(f"Line {line_number}: unknown condition '{row['condition']}'")
+            try:
+                price = Decimal(row['price'])
+            except InvalidOperation:
+                raise ValueError(f"Line {line_number}: invalid price '{row['price']}'")
             listing = Listing(
                 sku=row['sku'],
                 title=row['title'],
                 brand=row['brand'],
                 size=row['size'],
-                price=Decimal(row['price']),
+                price=price,
                 condition=condition,
                 description=row.get('description','')
             )

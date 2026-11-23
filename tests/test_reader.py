@@ -45,3 +45,10 @@ def test_bad_condition_reports_line_number(tmp_path):
         )
     with pytest.raises(ValueError, match="Line 3"):
         read_listings(csv_file)
+
+def test_bad_price_reports(tmp_path):
+    csv_file = tmp_path / "listings.csv"
+    csv_file.write_text("sku,title,brand,size,price,condition,description\n"
+        "CL001,Tee,NiKe,S,forty,good,red with blue dragon\n")
+    with pytest.raises(ValueError, match="Line 2"):
+        read_listings(csv_file)
